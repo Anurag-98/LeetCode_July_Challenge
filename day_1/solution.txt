@@ -1,0 +1,36 @@
+class Solution {
+    public:
+
+    //Complete the function below
+    int arrangeCoins(int n) {
+        /*
+        ||        Simple O(N) Approach    ||
+        if(n==0){
+            return 0;
+        }
+        long i;
+        for(i=1;(i*(i+1))/2<=n;i++){
+            
+        }
+        
+        return i-1;
+        */
+        
+        //  ||  better binary search approach O(log(N))    || 
+        long left = 0, right = n;
+        long k, curr;
+        while (left <= right) {
+          k = left + (right - left) / 2;
+          curr = k * (k + 1) / 2;
+
+          if (curr == n) return k;
+
+          if (n < curr) {
+            right = k - 1;
+          } else {
+            left = k + 1;
+          }
+        }
+        return right;
+    }
+};
