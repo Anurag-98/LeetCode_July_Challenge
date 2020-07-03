@@ -1,0 +1,46 @@
+class Solution {
+    
+    public:
+    
+    //Helper function to change the prison current state by 1 day
+    void help(vector<int>&input){
+        
+        //A vector to store the changed result
+        vector<int> change(8,0);
+        
+        //Iterating from '1' to '6' index as 0'th index and 7'th(last index) index
+        // will always be 0 because they don't have neighbours on both sides.
+        for(int i=1;i<=6;i++){
+            
+            //If only both neighbours are same, then it'll be 1 else 0. 
+            if( (input[i-1]==0 && input[i+1]==0) || (input[i-1]==1 && input[i+1]==1)){
+                change[i] = 1;
+            }
+        }
+        
+        //Now assigning this updated change to our original input vector
+        // [because every time this input will be processed for next iteration]
+        input = change;
+        
+    }
+    
+    //Complete the function below
+    vector<int> prisonAfterNDays(vector<int>& cells, int N) {
+        
+        //Cycle repeats after every 14 iterations
+        //( This can be found out using a Hashmap, which stores all combinations,
+        //  when some previously entered combination is seen again, it means cycle repeats
+        //  after that iterations[in this case it'll repeat after 14 iterations])
+        N= N%14==0 ? 14 : N%14;
+        
+        //Note: without this cycle detection way,Time limit will exceed(as combination repeats)
+        
+        //Now updating the input(cells vector), for N(updated) times!
+        for(int i=0;i<N;i++){
+            help(cells);
+        }
+        
+        //returning the updated input(cell vector)!
+        return cells;
+    }
+};
