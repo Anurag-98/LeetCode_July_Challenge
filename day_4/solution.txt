@@ -1,0 +1,113 @@
+class Solution {
+    public:
+    
+    //Complete the function below!
+    int nthUglyNumber(int n) {
+        /*
+        
+        //             ||  Approach I    ||
+        
+        //lets start The current ugly number with 1
+        long ugly_curr = 1;
+        
+        //Ordered Map(stays sorted according to 'key' values)
+        map<long,int> map;
+        
+        //Pushing the first ugly number in map;
+        map[ugly_curr]++;
+        
+        //A count variable that'll check we run loop n times
+        //  [After every iteration we get, i'th ugly number]
+        int count = 1;
+        for(;count<n;count++ ){
+            
+            // Picking the i'th ugly number to find the next one!
+            //  [the i'th(count - 1) ugly number will be at i'th position from beginning ]
+            auto it = map.begin();
+            
+            // This in-built advance function moves the map iterator in first argument,
+            // to the position specified in second argument
+            advance(it,count-1);
+            
+            //Now after getting previous latest ugly number, we'll mark our
+            // ugly_curr variable to this, to insert next possible values in map!
+            ugly_curr = it->first;
+            
+            //Now next possible entry can be a (2,3 or 5)times multiple of this current ugly
+            // [because ugly numbers only have 2,3,5 as factors]
+            long entry_wrt_2 = ugly_curr*2;
+            long entry_wrt_3 = ugly_curr*3;
+            long entry_wrt_5 = ugly_curr*5;
+            
+            //Inserting values in map, if already not inserted! 
+            
+            if(map.count(entry_wrt_2)==0){
+                map[entry_wrt_2]++;
+            }
+            if(map.count(entry_wrt_3)==0){
+                map[entry_wrt_3]++;
+            }
+            if(map.count(entry_wrt_5)==0){
+                map[entry_wrt_5]++;
+            }
+        }
+        
+        //Now the map is filled with lot of values, but our answer lies at n-1'th 
+        // position from beginning(since we wanted to find n'th ugly number)
+        
+        auto it = map.begin();
+        advance(it,n-1);
+        
+        //Stroring the result and returning it
+        int result = it->first;
+        return result;
+        
+        */
+        
+        // Note: Above approach is a little slower as we are adding unnecessary values
+        //      in our map too!
+        
+        /*******************************************************************************/
+        
+        
+        //     ||      Approach 2      ||
+        
+        //    [space optimised and faster]
+        
+        
+        //Taking a vector to store ugly numbers(initialising with 1 element with value 1)
+        vector<int> result(1,1);
+        
+        //Variables to store the count of multiles of 2,3,5 respectively!
+        int multiple_2 =0;
+        int multiple_3 =0;
+        int multiple_5 = 0;
+        
+        //Loop to insert n ugly numbers in our result vector!
+        while(result.size()<n){
+            
+            //Using the hint(The current ugly number will be min(2,3 or 5) times multiple
+            //               of last ugly entry)
+            // We'll insert the corresponding value in our vector!
+            int possibility_1 = result[multiple_2] * 2;
+            int possibility_2 = result[multiple_3] * 3;
+            int possibility_3 = result[multiple_5] * 5;
+            result.push_back( min(possibility_1, min(possibility_2,possibility_3)));
+            
+            //Checking that the currently inserted value was of which domain!
+            if(result.back() == result[multiple_2]*2)
+                multiple_2++;
+            if(result.back() == result[multiple_3]*3)
+                multiple_3++;
+            if(result.back() == result[multiple_5]*5)
+                multiple_5++;
+                             
+            //Note: It can be possible that a value added came from multiple domains,
+            //      for example 6 could have come from 2 (*3) or 3(*2), so we'll increment
+            //      count of domains correspondingly!
+        }
+        
+        //Returning the n'th ugly number!
+        return result[n-1];
+    }
+};
