@@ -1,0 +1,31 @@
+class Solution {
+    public:
+    
+    //Complete the function below
+    int hammingDistance(int x, int y) {
+        
+        //Taking a num variable that will store the XOR of x,y
+        //Note : The XOR of different bits is 1 else 0
+        //     [hence this new number formed, will contain 1's where bits were different]
+        int num = x^y;
+        
+        //--> Now we have to count the number of 1's in this new number
+        //         (That will give Hamming distance)
+        
+        //A variable to store the count of 1's
+        int count = 0;
+        
+        while(num>0){
+            
+            //This operation sets the first '1' bit in num to '0'
+            // Note : Hence to calculate number of 1's we will run loop till
+            //        number becomes 0(all bits '0')
+            num = (num)&(num-1);
+            
+            count++;
+        }
+        
+        //Returning the count(Which holds the number of 1's)
+        return count;
+    }
+};
