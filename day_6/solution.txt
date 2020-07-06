@@ -1,0 +1,64 @@
+class Solution {
+    
+    public:
+    
+    //Complete the function below
+    vector<int> plusOne(vector<int>& digits) {
+        
+        //    ||  In-place Approach(No Extra Space)   ||
+        
+        int n = digits.size();
+        
+        //If last digit is not nine, then simply increment it and return the input!
+        if(digits[n-1]!=9){
+            
+            digits[n-1] += 1;
+            return digits;
+            
+        }else{
+         //If the last digit is nine then :[All numbers after last non-nine should be 0]
+            
+            //A variable that will store position of last non-nine index in input(digits vector)
+            int lastNonNine = -1;
+
+            for(int i=0;i<n-1;i++){
+                
+                if(digits[i]!=9){
+                    
+                    lastNonNine=i;
+                }
+            }
+
+            //Variable to indicate starting position from where all entries should be 0
+            int make_0_starting_pos;
+
+            //If whole input is made of 9, then:
+            if(lastNonNine==-1){
+
+                //Insert 1 in beginning and make rest 0(because 999 + 1 = 1000)
+                digits.insert(digits.begin(),1);
+                make_0_starting_pos = 1;
+                n++;
+                
+            }else{
+
+                //Last non-nine entry should be incremented and after it all 0's
+                //   [3299 + 1 = 3300]
+                //     ^
+                //     |
+                //  LastNonNine
+                make_0_starting_pos = lastNonNine + 1;
+                digits[lastNonNine] += 1;
+            }
+
+            //Loop to make all required entries 0
+            while(make_0_starting_pos<n){
+                digits[make_0_starting_pos] = 0;
+                make_0_starting_pos++;
+            }
+        }
+     
+        //return the updated input(digits) vector!
+        return digits;
+    }
+};
