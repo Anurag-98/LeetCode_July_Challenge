@@ -1,0 +1,99 @@
+
+// A global directions 2-D array, that will help with navigating to 4 possible
+// directions(right,left,down,up) respectively!
+int directions[][2] = {{0,1},{0,-1},{1,0},{-1,0}};
+
+class Solution {
+    
+    public:
+    
+    //A self created function that'll use dfs method to calculate perimeter
+    void calculate_perimeter_dfs(vector<vector<int>>& grid,int & perimeter,int rows,int cols,int x,int y,bool** visited){
+        
+        //Marking the current cell as visited(so we don't revisit it again)
+        visited[x][y] = true;
+        
+        //A loop to call this function recursively in all possible directions
+        for(int i=0;i<4;i++){
+            
+            int newX = x+directions[i][0];
+            int newY = y+directions[i][1];
+            
+            //It specifies to work when : 
+            // 1) Both newX & newY are in range
+            // 2) This new direction cell is a piece of land(value '1')
+            // 3) If that new Direction is not visited yet
+            if(((newX<rows && newX>=0) && (newY<cols && newY>=0)) && grid[newX][newY]==1 &&                            !visited[newX][newY] )
+            {
+                
+                calculate_perimeter_dfs(grid,perimeter,rows,cols,newX,newY,visited);
+            }
+        }
+        
+        //A loop to increment the count which current cell(x,y) will Contribute to perimeter!
+        // Note : This count can be calculated by seeing that :
+        //        -->Every cell has 4 sides that can contribute to permieter, but
+        //           the only sides that can contribute are, where either there is
+        //           no neighbour on that direction(i.e. boundary side) or if there
+        //           is water(value '0') in that direction!
+        for(int i=0;i<4;i++){
+             
+            int newX = x+directions[i][0];
+            int newY = y+directions[i][1];
+            
+            if((newX<0 || newX>=rows) || (newY<0 || newY>=cols) || grid[newX][newY]==0){
+                
+                perimeter++;
+            }
+        }
+        
+        return;
+    }
+    
+    //Complete the function below
+    int islandPerimeter(vector<vector<int>>& grid) {
+        
+        int rows = grid.size();
+        //If no rows present(empty structure), return 0!
+        if(rows==0){
+            return 0;
+        }
+        
+        int cols = grid[0].size();
+        
+        //Making a visited 2-D array of input size, to track which cells
+        //will be visited!
+        bool **visited = new bool*[rows];
+        for(int i=0;i<rows;i++){
+            visited[i] = new bool[cols]{};
+        }
+        
+        //A variable to store total perimeter(It's reference will be passed in function,
+        //                                    so that the changes reflect here too!)
+        int perimeter=0;
+        
+        //A variable to catch the first time a piece of island is caught, so that we can 
+        //break from for loops
+        bool caught_island = false;
+        
+        
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<cols;j++){
+                
+                if(grid[i][j]==1){
+                    
+                    caught_island = true;
+                    calculate_perimeter_dfs(grid,perimeter,rows,cols,i,j,visited);
+                    break;
+                }
+                
+            }
+            
+            if(caught_island){
+                break;
+            }
+        }
+        
+        return perimeter;
+    }
+};
