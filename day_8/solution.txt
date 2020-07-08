@@ -1,0 +1,90 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    
+    public:
+    
+    //Complete the function below
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        
+        //A vector to store the solution!
+        vector<vector<int>> ans;
+        
+        int n = nums.size();
+        
+        //If less than 3 elements are there in input(no triplet can be formed)
+        if(n<3){
+            return ans;
+        }
+
+        //Sorting the input so that we store triplets in ascending order,
+        // [which will help in detecting duplicates and avoiding them]
+        sort(nums.begin(),nums.end());
+        
+        //We'll store our triplet entries(which will be ordered) in it,
+        // and if that entry already exists in it, then it won't be pushed in our
+        // solution('ans') vector!
+        map<vector<int>,bool> no_repeat;
+        
+        //Loop to iterate for first element as fixed in range from 0 to
+        //third last element(n-3)
+        for(int i=0;i<=n-3;i++){
+            
+            //To avoid duplicates
+            if(i>0 && nums[i]==nums[i-1]){
+                continue;
+            }
+            
+            int start = i+1;
+            int end = n-1;
+            
+            //A variable to store the required sum we want from remaining two elements!
+            int req_curr_sum = 0 - nums[i];
+            
+            while(start<end){
+                
+                int sum = nums[start] + nums[end];
+                
+                //Triplet found then,
+                if(req_curr_sum==sum){
+                     
+                    vector<int> entry;
+                    entry.push_back(nums[i]);
+                    entry.push_back(nums[start]);
+                    entry.push_back(nums[end]);
+                    
+                    //Check if this triplet already exist or not(if not then insert)
+                    if(no_repeat.count(entry)==0){
+                        
+                        //Mark as true
+                        no_repeat[entry]=true;
+                        //Insert in final solution('ans') vector
+                        ans.push_back(entry);
+                    }
+                    //Both under while loops To avoid duplicates!
+                    while(start < end && nums[start] == nums[start+1]){
+                                            
+                        start++;
+                    }
+                    while(start < end && nums[end] == nums[end-1]){
+                        
+                        end--;
+                    }
+                    
+                    start++;
+                    end--;
+                    
+                }else if(sum < req_curr_sum){
+                    
+                    start++;
+                }else{
+                    
+                    end--;
+                }
+            } 
+        }
+        
+        return ans;
+    }
+};
