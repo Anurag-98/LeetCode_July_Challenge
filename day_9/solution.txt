@@ -1,0 +1,126 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+
+//--> A pre-processor, so that we don't have to write this pair structure
+//    every time when we want to use it!(we can simply use 'iPair' keyword)
+#define iPair pair<TreeNode*,long>
+
+class Solution {
+    
+    public:
+    
+    //Complete the function below!
+    int widthOfBinaryTree(TreeNode* root) {
+        
+        //   ||  We will use the concept of Tree-Flattening  ||
+        
+        /*  1) [ In this, a tree(complete) can be imagined to be flattened(serialised),
+                and letf child of a node gets the index 2*parentIndex + 1 , and
+                right child gets the index of 2*parentIndex + 2 ]
+        
+            2) Then for each level, we'll check the number of elements in between
+                starting element and last element by subtracting their index(which
+                will give us the max-width in that level).
+            
+            3) Finally we'll keep comparing the max-width at each level, and return
+               the best one!
+        */
+        
+        //No node present, then width can't exist!
+        if(root==NULL){
+            return 0;
+        }
+        
+        //If only one node exist, width will be 1 !
+        if(root->left==NULL && root->right==NULL){
+            return 1;
+        }
+        
+        // A variable to store maximum width!
+        long result_width=1;
+        
+        //A queue for traversing tree level wise!
+        queue<iPair> q;
+        
+        //Initial pair for queue(which contains root node and '0' as index)
+        iPair startEntry = make_pair(root,0);
+        q.push(startEntry);
+        
+        
+        while(!q.empty()){
+            
+            int size = q.size();
+            
+            //starting index of current level
+            long startIndex = q.front().second;
+
+            //ending index of current level
+            long endIndex = q.back().second;
+            
+            result_width = max(result_width,endIndex - startIndex + 1);
+            
+            //A loop to put the next level into queue from the nodes of current level!
+            while(size>0){
+                
+                iPair curr_Entry = q.front();
+                q.pop();
+                
+                /*
+                    NOTE : We could have simply used :
+                
+                          --> long index = curr_Entry.second;
+                          
+                    [but for larger level like say beyond 64(2^64, will be out of range)]
+                
+                    so we can either take indexes in 
+                    1) unsigned long long(huge data type)
+                
+                            Or
+                    2) we can reduce the range of indexes(since at any instance we deal with 
+                                                            2 levels at max)
+                        -->So, we can reduce every index by startIndex :
+                        for e.g. if range was 5-12 --> children range will be 11-26
+                                        
+                                        after optimisation
+                                        
+                                range will be 0-7 --> children range will be 1-16
+                                
+                                i.e. window size in both cases stay same!
+                
+                */
+                int optimised_Index = curr_Entry.second - startIndex;
+                
+                
+                if(curr_Entry.first->left!=NULL){
+                    
+                    long newIndex = ( 2 * optimised_Index) + 1;
+                    iPair newEntry = make_pair(curr_Entry.first->left,newIndex);
+                    q.push(newEntry);
+                }
+                
+                if(curr_Entry.first->right!=NULL){
+                    
+                    long newIndex = ( 2 * optimised_Index) + 2;
+                    iPair newEntry = make_pair(curr_Entry.first->right,newIndex); 
+                    q.push(newEntry);
+
+                }
+                
+                size--;
+            }
+        }
+        
+        return result_width;
+        
+    }
+};
