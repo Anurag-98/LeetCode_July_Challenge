@@ -1,0 +1,74 @@
+/*
+
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* prev;
+    Node* next;
+    Node* child;
+};
+
+*/
+
+class Solution {
+    
+    public:
+
+    // Complete the function below
+    Node* flatten(Node* head) {
+        
+        //  *******        RECURSION APPROACH     ********
+        
+        //If there is no node present, return null!
+        if(head==NULL){
+            return head;
+        }
+        
+        //This will keep track of our current node's position!
+        Node*current = head;
+        
+        //While our current position node exist, keep working!
+        while(current){
+            
+            //-->If this current node has a child(first bring it's flattened
+            //                                  version via recursion )
+            if(current->child){
+                
+                Node * currChild = current->child;
+                
+                //-->Make the child of current as null(In answer we don't
+                //                                  need any node's child)
+                current->child = NULL;
+                
+                //Getting head of flattened list via recursion!
+                Node*flattened_list_head = flatten(currChild);
+                
+                //Store the next of current('nextCurr'),before breaking the connection!
+                Node * nextCurr = current->next;
+                
+                //Make a new connection between current and flattened_list_head!
+                current->next = flattened_list_head;
+                flattened_list_head->prev = current;
+                
+                //-->Now travel till end of that flattened list(It's ending node will
+                //                                              be our current now!)
+                while(current->next){
+                    current = current->next;
+                }
+                
+                //-->If that next of current(which we stored before breaking connection),
+                //    is not NULL then make a connection between our latest current & that
+                //    node(nextCurr)
+                if(nextCurr){
+                    current->next = nextCurr;
+                    nextCurr->prev = current;     
+                }
+            }
+            current = current->next;
+        }
+        
+        //return the head
+        return head;
+    }
+};
