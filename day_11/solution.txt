@@ -1,0 +1,64 @@
+class Solution {
+    
+    public:
+    
+    //Complete the function below
+    vector<vector<int>> subsets(vector<int>& nums) {
+        
+        //If input is blank, return vector with blank vector entry
+        if(nums.size()==0){
+            return {{}};
+        }
+        
+        //Base case(If only 1 element present in input)
+        if(nums.size()==1){
+        /*
+                return a vector with 2 vector entries(one blqnk,one itself)
+                for e.g. - input = [[1]], output = [[],[1]]
+        */
+            vector<vector<int>> result;
+            vector<int> blank;
+            result.push_back(blank);
+            result.push_back(nums);
+            return result;
+        }
+        
+        //Store your element and remove it from input
+        int myElement = nums[0];
+        auto it = nums.begin();
+        nums.erase(it);
+        
+        //Call recursion with updated input
+        vector<vector<int>> result = subsets(nums);
+    /*
+        We'll get half size ans, now we need to append our value in each input entry
+        and push them in this result vector to get final answer!
+        
+        for e.g.1) if input=[1,2,3] 
+                2) store first element in a variable = 1
+                3) updated input = [2,3]
+                4) pass this in recursion,we get output = [ [],[2],[3],[2,3] ]
+                5) append our first element('1') as seperate entries:
+                    final output = [ [],[2],[3],[2,3],[1],[1,2],[1,3],[1,2,3] ]
+                                                      ^                    ^
+                                                      |____________________|
+                                                                 |
+                                                            New Entries
+    */
+        int result_size = result.size();
+
+        for(int i=0;i<result_size;i++){
+            
+            vector<int> entry = result[i];
+            if(entry.size()==0){
+                entry.push_back(myElement);
+            }else{
+                entry.insert(entry.begin(),myElement);
+            }
+            
+            result.push_back(entry);
+        }
+        
+        return result;
+    }
+};
