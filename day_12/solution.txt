@@ -1,0 +1,29 @@
+class Solution {
+    
+    public:
+    
+    //Complete the function below!
+    uint32_t reverseBits(uint32_t n) {
+        
+        //    ||   Using Bit Manipulation    ||
+        
+        //A variable to store reversed number
+        uint32_t reverse = 0;
+
+        // A loop till all set('1') bits are present
+        while (n)
+        {
+            // find position of the rightmost set('1') bit
+            int pos = log2(n & -n) + 1;
+
+            // Set corresponding bit in result(In reverse, the Position will be '32-pos')
+            reverse = reverse | (1 << (32 - pos));
+
+            // This method Unsets(change to '0') the rightmost set('1') bit of a number
+            n = n & (n - 1);
+        }
+        
+        //return the reversed number!
+        return reverse;
+    }
+};
