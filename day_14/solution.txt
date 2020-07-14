@@ -1,0 +1,41 @@
+class Solution {
+    
+    public:
+    
+    //Complete the function below 
+    double angleClock(int hour, int minutes) {
+        
+        //Considering Total positions as 60 
+        
+        //Base position of hour's hand :
+        double hand_div_base;
+        if(hour==12){
+            hand_div_base = 0;
+        }else{
+            hand_div_base = hour*5;
+        }
+        
+    /*  --> The increment in hour hand caused by minute hand:
+               In 60 min span, hour hand changes by 5 positions]
+                            60 min --> 5 pos
+    */                     1  min --> 5/60 pos
+        double hand_div_impact = (minutes*5.0)/60;
+        
+        //Net position of hour hand
+        double net_hand_pos = hand_div_base + hand_div_impact;
+        
+        //The difference will give the range
+        double pos_diff = fabs(net_hand_pos-minutes);
+        
+        //Now as 60 pos makes 360 degrees, 1 pos makes 6 degrees :
+        double angle = pos_diff * 6;
+        
+        //Now check if complement of this angle is smaller(update the value)
+        if(angle>(360-angle)){
+            angle = 360-angle;
+        }
+        
+        //Return the final angle difference!
+        return angle;
+    }
+};
