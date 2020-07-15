@@ -1,0 +1,80 @@
+class Solution {
+    
+    public:
+    
+    //A helper function that simply reverse the whole string
+    //      [input: "Hi You", output: "uoy iH" ]
+    void reverse(string& s,int start,int end){
+      
+        while(start<end){
+            char p=s[start];
+            s[start]=s[end];
+            s[end]=p;
+            start++;
+            end--;
+        }
+    }
+    
+    //A helper function that reverses the string word wise:-
+    //   [input: "Hi You", output: "iH ouY"]
+    void reverseEachWord(string& input) {
+        
+        int start=0,end,i;
+        
+        for( i=0;input[i];i++){
+
+            if(input[i]==' '){
+                end=i-1;
+                reverse(input,start,end);
+                start=i+1;
+            }
+        }
+        reverse(input,start,i-1);
+    }
+    
+    //Complete the function below!
+    string reverseWords(string s) {
+        
+        int n= s.size();
+        bool firstNonSpaceChar = false;
+        
+       //A string variable to store proper input 
+        string s_new;
+        
+        //A loop to create the proper input(without leading or trailing spaces)!
+        //  [input: "  Hello  !World   " , output: "Hello !World"]
+        for(int i=0;i<n;i++){
+            if(s[i]==' '){
+                while(i+1<n && s[i+1]==' '){
+                    i++;
+                }
+                if(i!=n-1 && firstNonSpaceChar){
+                   s_new += s[i]; 
+                }
+            }else{
+                s_new += s[i];
+                firstNonSpaceChar = true;
+            }
+        }
+    /*
+            Now we have PROPER INPUT, so idea is:
+            
+            1) Reverse this input i.e. :
+                    e.g. input : "Hello World" ---> "dlroW olleH"
+                    
+            2) now just reverse the string word wise:
+                    we had --> input: "dlroW olleH", output: "World Hello"
+                    
+            HENCE, from: "Hello World" ---> "dlroW olleH" ----> "World Hello"
+                          (INPUT)                               (DESIRED OUTPUT)
+    */
+        int start = 0;
+        int end = s_new.size()-1;
+        
+        reverse(s_new,start,end);
+        
+        reverseEachWord(s_new);
+        
+        return s_new;
+    }
+};
