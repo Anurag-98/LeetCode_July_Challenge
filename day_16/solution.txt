@@ -1,0 +1,11 @@
+class Solution {
+   
+    public:
+    
+    // Complete the function below
+    double myPow(double x, int n) {
+        
+        //An In-built function that returns x raised to power n(x^n)
+        return pow(x,n);
+    }
+};
