@@ -1,0 +1,89 @@
+class Solution {
+    
+    public:
+    
+    //Complete the function below
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        
+        //              ||    Using Priority Queue  [Time complexity : O(nlog(k))]  ||
+        
+        /* Idea : -->we have to get k frequent elements and in less than O(nlog(n)),
+        
+                  -->So we can use priority Queue to get k max elements(on basis of frequency),
+                     and time complexity can be reduced to O(nlog(k))
+                  
+        Approch : 1) Make a unordered Map that will store the frequency of elements
+        
+                  2) Make a priority Queue which will help in providing,
+                     the k most frequent elements
+                     
+                  3) Now we will make  min priority queue which will store pair as entry
+                  
+                  4) And we'll keep the frequency as first element of pair 
+                    (Reason : The in-built 'greater' comparator for sorting, sorts
+                              the pair on basis of first property of pair, and we want 
+                              our elements to be sorted on basis of frequency)
+                 
+                 5) Push the first K elements of map in queue, then for every next element
+                    keep comparing it's frequency with the top(min freq element) element's freq
+                    
+                 6) If the freq of that top element is less , then remove the top element
+                    and push the current element.
+                    
+                 7) In the end, we'll have k most frequent element- pair(frequency,element)
+                    in queue
+        
+                 8) Make a vector , and push all the queue elements into the vector
+                 
+                 9) return the vector(which has the result)
+
+          Note : We can also have done this without priority queue by storing the map entries as pair in a vector of pairs,
+                and then sorting the vector---> but the time complexity of sorting would have been O(nlog(n))
+        */
+        unordered_map<int,int> map;
+        int inputSize = nums.size();
+        
+        //Putting elements in map
+        for(int i=0;i<inputSize;i++){
+            map[nums[i]]++;
+        }
+        // Syntax for a min. priority queue with entries as Pairs(pair<int,int>)
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+                
+        int mapSize = map.size();
+        auto it = map.begin();
+        
+        int i=0;
+        //Pushing the first k elements in queue
+        for(;i<k;i++){
+            
+            pq.push({it->second,it->first});
+            it++;
+        }
+        
+        //For remaining elements, checking and updating the queue
+        for(;i<mapSize;i++){
+            
+            int topEntryFreq = pq.top().first;
+            
+            if(it->second > topEntryFreq){
+                pq.pop();
+                pq.push({it->second,it->first});
+            }
+            
+            it++;
+        }
+        // A vector to store the result      
+        vector<int> result;
+        
+        //Pushing the elements of queue in result vector
+        while(!pq.empty()){
+            
+            int elem = pq.top().second;
+            result.push_back(elem);
+            pq.pop();
+        }
+       // Returning the result vector! 
+       return result;
+    }
+};
