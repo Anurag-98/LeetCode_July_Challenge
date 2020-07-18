@@ -1,0 +1,92 @@
+class Solution {
+    
+    public:
+    
+    //Important :::: I'm assigning that, completed state is marked as 10
+    //          [Completed here means that all work through this node is already done]
+    
+    //A function to detect cycle and store elements in stack in topologically sorted manner! 
+    bool dfs_cycleDetect_and_topologicalSort(int source,vector<int> adjList[],int visited[],stack<int> & st){
+        
+        //means presence of back edge(i.e. have reached same node from where we started)
+        if(visited[source]==1){
+                           
+            //As cycle is detected
+            return true;
+            
+        }else if(visited[source]==10){
+            
+            //As all work through this is done, return false(i.e. No cycle present)
+            return false;
+        }
+        
+        //not visited even once yet(then mark it as visited)
+        visited[source]=1;
+        
+        //Now looping, for storing elements in toplogical sorted order!
+        for(int i=0;i<adjList[source].size();i++){
+            
+            int neighbour = adjList[source][i];
+            if(dfs_cycleDetect_and_topologicalSort(neighbour,adjList,visited,st)){
+                //As cycle is detected
+                return true;
+            }
+        }
+        
+        //All the neighbour work is done, mark the source as completed!
+        visited[source] = 10;
+        //Push the source in stack
+        st.push(source);
+        //return false, ,meaning that the graph through source has no cycle!
+        return false;
+    }
+    
+    //Complete the function below!
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+         
+        vector<int> adjList[numCourses];
+        
+        // Making adjacency List
+        for(int i=0;i<prerequisites.size();i++){
+            
+            int node = prerequisites[i][1]; 
+            int neighbour = prerequisites[i][0];
+            adjList[node].push_back(neighbour);
+        }
+        
+        //Making a visited array, to keep track of state of node
+         // There will be 3 states :
+        //    [ 1) 0 : unvisited , 2) 1 : visited, 3) 10 : complete ]
+        int visited[numCourses];
+        //Initialising every state as unvisited!
+        for(int i=0;i<numCourses;i++){
+            
+            visited[i]=0;
+        }
+        
+        //A stack that will store topologically sorted order of nodes
+        stack<int> st;
+        //A vector to store the result!
+        vector<int> result;
+        
+        for(int i=0;i<numCourses;i++){
+            //Perform work for every unvisited node(component)
+            if(!visited[i]){
+                if(dfs_cycleDetect_and_topologicalSort(i,adjList,visited,st)){
+                    //Cycle Detected(i.e. return blank vector('result') )
+                    return result;
+                }
+            }
+        }
+        //Now we have solution in stack, but we need to return a vector as solution,
+        // so pushing all stack values in our result vector
+        while(!st.empty()){
+            int nodeVal = st.top();
+            st.pop();
+            result.push_back(nodeVal);
+        }
+        
+        //Returning the solution vector('result')
+        return result;
+    }
+};
