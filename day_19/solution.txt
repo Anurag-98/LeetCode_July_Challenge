@@ -1,0 +1,33 @@
+class Solution {
+    
+    public:
+    
+    //Complete the function below
+    string addBinary(string a, string b) {
+        
+        int aLen = a.size() - 1;
+        int bLen = b.size() - 1;
+        int k = 0;
+        
+        //A string to store result
+        string res = "";
+        
+        bool carry = 0;
+        
+        while(k <= aLen || k <= bLen) {
+            //cuurent position net value:
+            int val = (k <= aLen && a[aLen-k] == '1') + (k <= bLen && b[bLen-k] == '1') + carry;
+            //Add the corresponding val in result
+            res = to_string(val%2) + res;
+            
+            carry = val >= 2;
+            k++;
+        }
+        
+        //Edge case, if length of both has finished, but carry 1 is left:
+        if(carry){
+            res = to_string(carry) + res;
+        }
+        return res;
+    }
+};
