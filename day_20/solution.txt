@@ -1,0 +1,77 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+    
+    public:
+    
+    //Complete the function below
+    ListNode* removeElements(ListNode* head, int val) {
+        
+        if(head==NULL){
+            return NULL;
+        }
+        
+        //Making a list of given values(To be deleted later)
+        ListNode* ListOfValHead=NULL;
+        ListNode* ListOfValTail=NULL;
+        
+        //To keep track of list without given value('val') nodes
+        ListNode* NewListHead=NULL;
+        ListNode* NewListTail=NULL;
+        
+        ListNode * current = head;
+
+        //A Loop to create the two lists(one of val and other without val)
+        while(current){
+            
+            if(current->val==val){
+                
+                if(ListOfValHead==NULL){
+                    ListOfValHead=current;
+                    ListOfValTail=current;
+                }else{
+                    ListOfValTail->next = current;
+                    ListOfValTail = ListOfValTail->next;
+                }
+            }else{
+                
+                if(NewListHead==NULL){
+                    NewListHead = current;
+                    NewListTail = current;
+                }else{
+                    NewListTail->next = current;
+                    NewListTail = NewListTail->next;               
+                }
+            }
+            current = current->next;
+        }
+        
+        if(NewListTail){
+            NewListTail->next = NULL;
+        }
+
+        if(ListOfValTail){
+            ListOfValTail->next = NULL;
+        }
+        
+        current = ListOfValHead;
+        
+        //A loop to delete(free) the memory taken by val nodes list!
+        while(current){
+            ListNode* next = current->next;  
+            delete current;  
+            current = next;  
+        }
+        
+        //returning the head of new list we created(which has no nodes of val)
+        return NewListHead;
+    }
+};
