@@ -1,0 +1,60 @@
+class Solution {
+    
+    public:
+    
+    //A helper function that checks the given word can be found in the board or not
+    bool dfs(vector<vector<char> >& board,int i,int j,string &word){
+        
+        //Word found. return true!
+        if(word.size()==0){
+            return true;
+        }
+/*         -->Don't search further if:
+        
+           1) not safe(invalid index of i,j) 
+                      or
+           2) current char does not match the first char of string('word')
+*/
+        if(i<0 || i>=board.size() || j<0 || j>=board[0].size() || board[i][j]!=word[0]){
+            return false;
+        }
+        
+        char c=board[i][j];
+        //Modify the current char, so that we don't visit this again in recursive call!
+        board[i][j]='*';
+        string s=word.substr(1);
+        
+        //-->A variable to check recursively for solution in all adjacent(vertical,
+        //   horizontal) directions.
+        bool ret=dfs(board,i,j+1,s) || dfs(board,i,j-1,s) || dfs(board,i+1,j,s) || dfs(board,i-1,j,s);
+        
+        //change the current char back to original after the work(recursion) is done!
+        board[i][j]=c;
+        
+        return ret;
+    }   
+    
+    //Complete the function below
+    bool exist(vector<vector<char>>& board, string word) {
+        
+        if(word.size()==0){
+            return {{}};
+        }
+        
+        //-->Check for every character in board that matches with word's first character,
+        //   and call the helper function(dfs) to process whether word can be formed from
+        //   that starting point or not!
+        for(int i=0;i<board.size();i++){
+            for(int j=0;j<board[0].size();j++){
+                
+                if(board[i][j]==word[0]){
+                    
+                    if(dfs(board,i,j,word)){
+                        return true;
+                    } 
+                }
+            }
+        }
+        return false;
+    }
+};
