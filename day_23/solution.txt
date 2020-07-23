@@ -1,0 +1,68 @@
+class Solution {
+    
+    public:
+    
+    //Complete the function below!
+    vector<int> singleNumber(vector<int>& nums) {
+        
+        //     ||    Using Bit Manipulation   ||
+        
+/*      Approach :- [Time : O(n), Space : O(1)]
+        
+            1) Take Xor of all the numbers in array(duplicates cancels out),
+                and only xor of two unique element is present in totalXor
+                
+            2) Now find the first Set('1') bit in totalXor(Will be used for grouping)
+            
+            3) Now loop through inputs and keep checking which grp it belongs to:
+
+                a) either it will be on group where that set bit is same, or in other group
+                
+                b) now both elements will surely fall in different groups because xor operation
+                   eveluates to 1 when both have different bits(0^1 = 1), and set bit we are
+                   using was of totalXor of both numbers, thus both number must had different
+                   bits at that position which gave set('1') bit in totalXor ).
+
+                 c) rest elements can fall in any grp based on value they have at that position,
+                    but they'll cancel out in XOR operation
+                    
+                 d) Thus we will have both numbers which were required
+*/
+        int totalXor = 0;
+        int n = nums.size();
+
+        //step-> (1)
+        for(int i=0;i<n;i++){
+            totalXor = totalXor ^ nums[i];
+        }
+        
+        int FirstSetBitPos = 0;
+
+        //step-> (2)
+        while(FirstSetBitPos < 32){
+            if(totalXor & (1<<FirstSetBitPos)){
+                break;
+            }
+            FirstSetBitPos++;
+        }
+        
+        int num1=0,num2=0;
+        
+        //step-> (3)
+        for(int i=0;i<n;i++){
+            
+            if(nums[i] &(1<<FirstSetBitPos)){
+                num1 = num1^nums[i];
+            }else{
+                num2 = num2^nums[i];
+            }
+        }
+        
+        //A vector that will store both result elements
+        vector<int> result;
+        result.push_back(num1);
+        result.push_back(num2);
+        
+        return result;
+    }
+};
