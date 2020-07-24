@@ -1,0 +1,39 @@
+class Solution {
+    
+    public:
+
+    //Helper function that works in dfs manner and travels all paths
+    void help_dfs(int src,int dest,vector<vector<int>>& graph,vector<int>& path,vector<vector<int>> &result ){
+        
+/*      BASE CASE  (if we have reached destination, then push it into our path,
+                      and put that path in result)
+*/      if(src==dest){
+            path.push_back(src);
+            result.push_back(path);
+            path.pop_back();
+            return;
+        }
+        
+        int size = graph[src].size();
+
+/*      Now loop through all the neighbours of our src,
+          (and check recursively, path from neighbours to destination)
+*/      for(int i=0;i<size;i++){
+            path.push_back(src);
+            int newSrc = graph[src][i];
+            help_dfs(newSrc,dest,graph,path,result);
+            path.pop_back();
+        }
+    }
+    
+    //Complete the function below!
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+        
+        vector<vector<int>> result;
+        int size = graph.size();
+        vector<int> path;
+        help_dfs(0,size-1,graph,path,result);
+        
+        return result;
+    }
+};
