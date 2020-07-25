@@ -1,0 +1,37 @@
+class Solution {
+    
+    public:
+    
+    //Complete the function below
+    int findMin(vector<int>& nums) {
+        
+        /*      MODIFIED BINARY SEARCH        */
+        int l=0;
+        int r = nums.size()-1;
+    
+        while(l<=r){
+            
+            //lowest element found
+            if(l==r){
+                return nums[l];
+            }
+            int mid = (l+r)/2;
+            
+            //Case 1: the lowest lies in right half of mid(window size will be reduced by half)
+            if(nums[mid]>nums[r]){
+                l = mid+1;
+                
+            }
+            //Case 2 : the lowest will definitely lie in left half(window size will be reduced by half)
+            else if(nums[mid]<nums[r]){
+                r = mid;
+            }
+            //Case 3:(Special) : lowest can lie anywhere , so we just reduce the window
+            //                   size by 1.
+            else{
+                r = r-1;
+            }
+        }
+        return nums[l];
+    }
+};
