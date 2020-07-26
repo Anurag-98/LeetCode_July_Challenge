@@ -1,0 +1,21 @@
+class Solution {
+    
+    public:
+    
+    // Complete the function below!
+    int addDigits(int num) {
+        
+        if(num==0){
+            return 0;
+        }   
+/*          Found the formula via wikipedia's page given in hint:
+            
+                Formula : 1 + (number-1)mod(base-1),
+                
+                In our case base is 10
+*/
+        int ans = 1 + (num-1)%(9);
+        
+        return ans;
+    }
+};
