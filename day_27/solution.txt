@@ -1,0 +1,93 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+ /*     APPROACH :
+        
+        1) Call the helper function, that will return the root of the required tree
+           (It takes starting and end index of both orders as arguments)
+           
+           Note : INORDER format is   : Left root right
+                  POSTORDER format is : left right root
+                  
+        2)  The helper function works using recursion:-
+           
+           i) so root of tree will always be rightmost index of postorder
+           
+           ii) find root's index in inorder:
+                --> It's left portion will form left subtree
+                --> It's right portion will form right subtree
+            
+            iii) Make a new node named as root with above value,Then decide 
+                the coordinates of start and ending indexes of both orders
+                using above insights for left and right half!
+            
+            iv)-->Pass the left subtree data in recursion(That will generate left sub-tree
+                                                            and return it's root)
+               -->Pass the rightt subtree data in recursion(That will generate right sub-tree
+                                                             and return it's root)
+                                                             
+            v) Now attach this left and right subtree root in the root we initialised
+            
+            vi) Return the root of this desired tree which we have created via recursion!
+*/
+
+class Solution {
+    
+    public:
+    
+    //A helper recursive function, that will create the tree and return it's root!
+    TreeNode* help(vector<int>& postorder,vector<int>& inorder,int postS,int postE,int inS,int inE){
+    
+        if(postS==postE || inS==inE){
+            TreeNode* newNode = new TreeNode(postorder[postE]);
+            return newNode;
+        }
+
+        if(postS>postE || inS>inE){
+            return NULL;
+        }
+
+        TreeNode* root = new TreeNode(postorder[postE]);
+        int rootIndex;
+        for(int i=inS;i<=inE;i++){
+            if(inorder[i]==postorder[postE]){
+                rootIndex = i;
+                break;
+            }
+        }
+        int count = inE - rootIndex;
+
+        int rpostS = postE - count;
+        int rpostE = postE - 1;
+        int lpostS = postS;
+        int lpostE = rpostS-1;
+
+        int linS = inS;
+        int linE = rootIndex-1;
+        int rinS = rootIndex+1;
+        int rinE = inE;
+
+        TreeNode* leftT = help(postorder,inorder,lpostS,lpostE,linS,linE);
+        TreeNode* rightT = help(postorder,inorder,rpostS,rpostE,rinS,rinE);
+        root->left = leftT;
+        root->right = rightT;
+        return root;
+    }
+
+    //Complete the function below!
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        
+        int postLength = postorder.size();
+        int inLength = inorder.size();
+        return help(postorder,inorder,0,postLength-1,0,inLength-1);
+    }    
+};
