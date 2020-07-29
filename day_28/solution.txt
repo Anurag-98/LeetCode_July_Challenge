@@ -1,0 +1,70 @@
+class Solution {
+    
+    public:
+    
+    int leastInterval(vector<char>& tasks, int n) {
+        
+        unordered_map<char, int> freq;
+        
+        //Storing frequencies in map
+        for(int i=0;i<tasks.size();i++){
+            freq[tasks[i]]++;
+        } 
+/*      
+ ----> A priority Queue for taking out the char(task) with maximum frequency
+      [We greedily pick the maximum frequency task, to minimise the scheduling(CPU) time]
+*/      priority_queue<int> pq;
+
+        for(auto it : freq){
+            pq.push(it.second);            
+        }
+        
+        //A variable to store the final result(Total CPU Time)
+        int result = 0;
+        
+        //A loop to schedule tasks( In every cycle we increase result )
+        while(!pq.empty()){
+            
+            int time = 0;
+            //-->A temporary vector to store the characters(with reduced frequency after
+            //   one cycle and then put them back to priority queue)
+            vector<int> temporary;
+            
+            // A minimum window of n+1 size for one cycle(+1 for the task itself along
+            //                                             gap of 'n' units)
+            for(int i = 0; i < n+1; ++i){
+                if(!pq.empty()){
+                    //Reduce freq by one(denoting one task of this type has been done)
+                    temporary.push_back(pq.top() - 1);
+                    pq.pop();
+                    //Increase the time
+                    time++;
+                }
+            }
+            
+            //-->Loop to put back the tasks(having reduced frequencies)
+            //   in priority queue
+            for(int i=0;i<temporary.size();i++){
+                //Putting back task with non-zero(work is left)
+                if(temporary[i]!=0){
+                   pq.push(temporary[i]); 
+                } 
+            }
+            
+            //-->If we are in last cycle[Implies queue is empty, then add only time
+            //                           (which will be present due to tasks and not
+            //                             idle time ) ]
+            if(pq.empty()){
+                result += time;  
+            }
+            //In all other cases add n+1(units) in result :
+            // [because even if tasks are less then n, we can't allocate before than that
+            //   and remaining(If any) will be idle time ]
+            else{
+                result += n+1;
+            }
+        }
+        
+        return result;
+    }
+};
