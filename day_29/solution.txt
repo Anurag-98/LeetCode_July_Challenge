@@ -1,0 +1,72 @@
+
+//     3 STATE APPROACH
+
+class Solution {
+    public:
+    
+    //Complete the function below
+    int maxProfit(vector<int>& prices) {
+        if(prices.size() <= 1) return 0;
+        int A = 0, B = -prices[0], C = 0;
+        for(int i = 1; i < prices.size(); ++i){
+            int tmp = A;
+            A = max(A, C);
+            C = B + prices[i];
+            B = max(B, tmp - prices[i]);
+        }
+        return max(A, C);
+    }
+};
+/*
+class Solution {
+    
+    public:
+    
+    //      RECURSIVE APPROACH(TLE)     
+
+    int help(int* input,int n,bool canSell, int expenses){
+        
+       if(n<=0){
+           return expenses;
+       }
+        
+        if(n==1){
+            
+            if(canSell){
+                return expenses + input[0];
+
+            }else{
+               return expenses;
+            }
+        }
+        
+        int ans = 0;
+        if(canSell){
+
+            int op1 = help(input+2,n-2,false,expenses + input[0]);
+            int op2 = help(input+1,n-1,canSell,expenses);
+            ans = max(op1,op2);
+        }else{
+            
+            int op3 = help(input+1,n-1,true,expenses-input[0]);
+            int op4 = help(input+1,n-1,canSell,expenses);
+            ans = max(op3,op4);
+        }
+       
+        return ans;
+    }
+    
+    //Complete the function below!
+    int maxProfit(vector<int>& prices) {
+
+        if(prices.size()==0 || prices.size()==1){
+            return 0;
+        }
+        
+        int ans = help(arr,size,false,0,dp);
+
+        return ans;
+    }
+
+*/
+
