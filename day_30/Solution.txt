@@ -1,0 +1,62 @@
+class Solution {
+    
+    public:
+    
+    //Helper function, that uses memoisation for computing desired output
+    vector<string> help(string s, vector<string>& wordDict,unordered_map<string, vector<string>>& map){
+        
+        //Blank input(return blank output)
+        if(s.empty()){
+            return {""};
+        }
+        
+        //If value already present in map, use it!
+        if(map.count(s)){
+            return map[s];
+        }
+        // A vector to store recursion call output and one to store final result!
+        vector<string> temp,result;
+        
+        //For every word in input of dictionary:
+        for(string word : wordDict){
+            
+            //Take this word of same length as current word from word dictionary!
+            string check = s.substr(0,word.length());
+            
+            //we'll check if that word matches starting of string
+            if(check != word){
+
+                continue ; 
+
+            }else{
+
+                //call recursion(and pass the remaining input string)
+                temp = help(s.substr(word.length()) , wordDict,map);
+            }
+            
+            //for every word(ans) in temporary(the vector that has result of recursion)
+            for(string ans : temp){
+                
+                string currentSpace = ans.length()==0 ? "" : " ";
+                
+                //push the current string(word + spaces in them + current string from recursion)
+                result.push_back(word+currentSpace+ans);
+            }
+        }
+        
+        //Store the result in map(so that it might be useful later)
+        map[s] = result;
+        
+        //return this result vector value! 
+        return result;
+        
+    }
+
+    //Complete the function below!
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        
+        unordered_map<string, vector<string>> map;
+        
+        return help(s,wordDict,map);
+    }
+};
